@@ -100,5 +100,9 @@ namespace UserService.Services
 
             return user;
         }
+
+        // There is no DeleteAsync - admin deactivates instead
+        // Reason: User's travel plans live in a different database owned by a different service
+        // Hard delete would orphan rows over there
     }
 }
