@@ -24,10 +24,12 @@ namespace TravelService.Services
     public class TravelPlanService : ITravelPlanService
     {
         private readonly TravelDbContext _dbContext;
+        private readonly IPlanAccessService _planAccess;
 
-        public TravelPlanService(TravelDbContext dbContext)
+        public TravelPlanService(TravelDbContext dbContext, IPlanAccessService planAccess)
         {
             _dbContext = dbContext;
+            _planAccess = planAccess;
         }
 
         public async Task<List<TravelPlanSummaryDto>> GetAllForUserAsync(int userId)
@@ -56,7 +58,7 @@ namespace TravelService.Services
 
         public async Task<TravelPlanDto> GetByIdAsync(int planId, int userId)
         {
-            var plan = await LoadOwnedPlanAsync(planId, userId);
+            var plan = await _planAccess.RequirePlanAsync(planId, userId, includeChuldren: true);
             return plan.ToDto();
         }
 
@@ -86,7 +88,7 @@ namespace TravelService.Services
         {
             ValidateDateRange(dto.StartDate, dto.EndDate);
 
-            var plan = await LoadOwnedPlanAsync(planId, userId);
+            var plan = await _planAccess.RequirePlanAsync(planId, userId, includeChuldren: true);
 
             var newStart = dto.StartDate.Date;
             var newEnd = dto.EndDate.Date;
@@ -109,7 +111,7 @@ namespace TravelService.Services
 
         public async Task DeleteAsync(int planId, int userId)
         {
-            var plan = await LoadOwnedPlanAsync(planId, userId);
+            var plan = await _planAccess.RequirePlanAsync(planId, userId, includeChuldren: true);
 
             _dbContext.TravelPlans.Remove(plan);
             await _dbContext.SaveChangesAsync();
@@ -118,20 +120,6 @@ namespace TravelService.Services
         //---------------------------------------------------------------------------------
         //---------------------------------------------------------------------------------
 
-        private async Task<TravelPlan> LoadOwnedPlanAsync(int planId, int userId)
-        {
-            var plan = await _dbContext.TravelPlans
-                .Include(p => p.Destinations)
-                .Include(p => p.Activities)
-                .Include(p => p.Expenses)
-                .Include(p => p.ChecklistItems)
-                .FirstOrDefaultAsync(p => p.Id == planId);
-
-            if (plan == null || plan.UserId != userId)
-                throw new NotFoundException($"Travel plan with id {planId} was not found.");
-
-            return plan;
-        }
 
         private static void ValidateDateRange(DateTime startDate, DateTime endDate)
         {
