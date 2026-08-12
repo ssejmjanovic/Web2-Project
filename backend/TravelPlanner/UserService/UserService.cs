@@ -51,7 +51,9 @@ namespace UserService
                                         config.AddInMemoryCollection(new Dictionary<string, string>
                                         {
                                             ["ConnectionStrings:UsersDatabase"] = secrets.Parameters["ConnectionString"].Value,
-                                            ["Jwt:Key"] = secrets.Parameters["JwtKey"].Value
+                                            ["Jwt:Key"] = secrets.Parameters["JwtKey"].Value,
+                                            ["Admin:Email"] = secrets.Parameters["AdminEmail"].Value,
+                                            ["Admin:Password"] = secrets.Parameters["AdminPassword"].Value
                                         });
                                     })
                                     .ConfigureServices(

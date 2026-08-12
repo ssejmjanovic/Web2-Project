@@ -5,5 +5,7 @@
 	<Section Name="Secrets">
 		<Parameter Name="ConnectionString" Value="Server=localhost,1433;Database=TravelPlanner_Users;User Id=sa;Password=SuperStrongPassword123!;TrustServerCertificate=True;" />
 		<Parameter Name="JwtKey" Value="yNjCVMu2/HARfwdvdCkgQcG8D2IECAVPnIATGSR8YQcI5t0f3qNRhl2cFZqA+BwB" />
+		<Parameter Name="AdminEmail" Value="admin@travelplanner.com" />
+		<Parameter Name="AdminPassword" Value="Admin#2026!" />
 	</Section>
 </Settings>
