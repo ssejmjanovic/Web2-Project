@@ -15,6 +15,7 @@ namespace TravelService.Models
         public DateTime EndDate { get; set; }
         public decimal Budget { get; set; }
         public string Notes { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
 
         public List<Destination> Destinations { get; set; } = new List<Destination>();
