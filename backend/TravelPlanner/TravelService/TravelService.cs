@@ -43,6 +43,16 @@ namespace TravelService
                                     {
                                         config.SetBasePath(Directory.GetCurrentDirectory());
                                         config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+
+                                        var secrets = serviceContext.CodePackageActivationContext
+                                            .GetConfigurationPackageObject("Config")
+                                            .Settings.Sections["Secrets"];
+
+                                        config.AddInMemoryCollection(new Dictionary<string, string>
+                                        {
+                                            ["ConnectionStrings:TravelDatabase"] = secrets.Parameters["ConnectionString"].Value,
+                                            ["Jwt:Key"] = secrets.Parameters["JwtKey"].Value
+                                        });
                                     })
                                     .ConfigureServices(
                                         services => services
