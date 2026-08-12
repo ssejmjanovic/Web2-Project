@@ -58,7 +58,7 @@ namespace TravelService.Services
 
         public async Task<TravelPlanDto> GetByIdAsync(int planId, int userId)
         {
-            var plan = await _planAccess.RequirePlanAsync(planId, userId, includeChuldren: true);
+            var plan = await _planAccess.RequirePlanAsync(planId, userId, includeChildren: true);
             return plan.ToDto();
         }
 
@@ -88,7 +88,7 @@ namespace TravelService.Services
         {
             ValidateDateRange(dto.StartDate, dto.EndDate);
 
-            var plan = await _planAccess.RequirePlanAsync(planId, userId, includeChuldren: true);
+            var plan = await _planAccess.RequirePlanAsync(planId, userId, includeChildren: true);
 
             var newStart = dto.StartDate.Date;
             var newEnd = dto.EndDate.Date;
@@ -111,7 +111,7 @@ namespace TravelService.Services
 
         public async Task DeleteAsync(int planId, int userId)
         {
-            var plan = await _planAccess.RequirePlanAsync(planId, userId, includeChuldren: true);
+            var plan = await _planAccess.RequirePlanAsync(planId, userId, includeChildren: true);
 
             _dbContext.TravelPlans.Remove(plan);
             await _dbContext.SaveChangesAsync();

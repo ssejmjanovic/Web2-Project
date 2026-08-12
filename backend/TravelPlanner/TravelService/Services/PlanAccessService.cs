@@ -12,7 +12,7 @@ namespace TravelService.Services
 
     public interface IPlanAccessService
     {
-        Task<TravelPlan> RequirePlanAsync(int planId, int userId, bool includeChuldren = false);
+        Task<TravelPlan> RequirePlanAsync(int planId, int userId, bool includeChildren = false);
     }
 
     public class PlanAccessService : IPlanAccessService
@@ -25,11 +25,11 @@ namespace TravelService.Services
         }
 
 
-        public async Task<TravelPlan> RequirePlanAsync(int planId, int userId, bool includeChuldren = false)
+        public async Task<TravelPlan> RequirePlanAsync(int planId, int userId, bool includeChildren = false)
         {
             var query = _dbContext.TravelPlans.AsQueryable();
 
-            if (includeChuldren)
+            if (includeChildren)
             {
                 query = query
                     .Include(p => p.Destinations)
