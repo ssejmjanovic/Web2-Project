@@ -20,6 +20,6 @@ namespace TravelService.Models
         public List<Destination> Destinations { get; set; } = new List<Destination>();
         public List<Activity> Activities { get; set; } = new List<Activity>();
         public List<Expense> Expenses { get; set; } = new List<Expense>();
-        public List<ChecklistItem> CheklistItems { get; set; } = new List<ChecklistItem>();
+        public List<ChecklistItem> ChecklistItems { get; set; } = new List<ChecklistItem>();
     }
 }
