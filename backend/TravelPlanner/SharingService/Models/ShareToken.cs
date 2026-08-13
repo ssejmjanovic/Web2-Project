@@ -15,6 +15,6 @@ namespace SharingService.Models
         [DataMember] public ShareAccessLevel AccessLevel { get; set; }
         [DataMember] public DateTime CreatedAtUtc { get; set; }
         [DataMember] public DateTime? ExpiresAtUtc { get; set; }
-        [DataMember] bool IsRevoked { get; set; }
+        [DataMember] public bool IsRevoked { get; set; }
     }
 }
