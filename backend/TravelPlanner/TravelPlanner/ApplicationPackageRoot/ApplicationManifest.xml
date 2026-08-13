@@ -12,15 +12,15 @@
        ServiceManifest.xml file. -->
   <ServiceManifestImport>
     <ServiceManifestRef ServiceManifestName="SharingServicePkg" ServiceManifestVersion="1.0.0" />
-	  <ConfigOverrides>
-		  <ConfigOverride Name="Config">
-			  <Settings>
-				  <Section Name="Secrets">
-					  <Parameter Name="JwtKey" Value="[JwtKey]"/>
-				  </Section>
-			  </Settings>
-		  </ConfigOverride>
-	  </ConfigOverrides>
+    <ConfigOverrides>
+      <ConfigOverride Name="Config">
+        <Settings>
+          <Section Name="Secrets">
+            <Parameter Name="JwtKey" Value="[JwtKey]" />
+          </Section>
+        </Settings>
+      </ConfigOverride>
+    </ConfigOverrides>
     <EnvironmentOverrides CodePackageRef="code">
       <EnvironmentVariable Name="ASPNETCORE_ENVIRONMENT" Value="[SharingService_ASPNETCORE_ENVIRONMENT]" />
     </EnvironmentOverrides>
