@@ -12,7 +12,7 @@ namespace ApiGateway.Services
         bool TryResolve(string path, out string targetBaseUrl);
     }
 
-    public class ServiceRouteResolver
+    public class ServiceRouteResolver : IServiceRouteResolver
     {
         private readonly List<(string Prefix, string BaseUrl)> _routes;
 
