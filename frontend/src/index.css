@@ -1,26 +1,27 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Nunito+Sans:wght@400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Nunito+Sans:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 
 @theme {
   /* Sky / water */
-  --color-sky-deep:  #0369a1;
-  --color-sky-aero:  #38bdf8;
+  --color-sky-deep: #0369a1;
+  --color-sky-aero: #38bdf8;
+  --color-sky-mid: #0ea5e9;
   --color-sky-light: #e0f2fe;
 
   /* Green / nature */
-  --color-grass:       #22c55e;
-  --color-grass-deep:  #15803d;
+  --color-grass: #22c55e;
+  --color-grass-deep: #15803d;
   --color-grass-light: #dcfce7;
 
   /* Neutrals */
-  --color-ink:         #0f172a;
-  --color-ink-light:   #475569;
-  --color-chrome:      #e2e8f0;
+  --color-ink: #0f172a;
+  --color-ink-light: #475569;
+  --color-chrome: #e2e8f0;
   --color-chrome-dark: #64748b;
 
   /* Typography */
-  --font-display: 'Nunito', sans-serif;
-  --font-body:    'Nunito Sans', sans-serif;
+  --font-display: "Nunito", sans-serif;
+  --font-body: "Nunito Sans", sans-serif;
 }
 
 @layer base {
