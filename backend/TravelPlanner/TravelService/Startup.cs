@@ -2,6 +2,7 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using TravelService.Authentication;
 using TravelService.Data;
 using TravelService.Middleware;
 using TravelService.Services;
@@ -29,6 +31,9 @@ namespace TravelService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHttpClient();
+            services.AddHttpContextAccessor();
+
             services.AddDbContext<TravelDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("TravelDatabase")));
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
@@ -50,10 +55,21 @@ namespace TravelService
                         NameClaimType = "sub",
                         RoleClaimType = "role"
                     };
-                });
+                })
+                .AddScheme<ShareTokenAuthenticationOptions, ShareTokenAuthenticationHandler>(ShareTokenAuthenticationHandler.SchemeName, _ => { });
 
-            services.AddAuthorization();
+            services.AddAuthorization(options =>
+            {
+                options.DefaultPolicy = new AuthorizationPolicyBuilder(
+                        JwtBearerDefaults.AuthenticationScheme,
+                        ShareTokenAuthenticationHandler.SchemeName)
+                    .RequireAuthenticatedUser()
+                    .Build();
+            });
 
+
+            services.AddScoped<ICallerContext, CallerContext>();
+            services.AddScoped<IShareValidationClient, ShareValidationClient>();
             services.AddScoped<IPlanAccessService, PlanAccessService>();
             services.AddScoped<ITravelPlanService, TravelPlanService>();
             services.AddScoped<IDestinationService, DestinationService>();

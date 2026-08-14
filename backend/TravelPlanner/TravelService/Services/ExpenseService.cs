@@ -13,11 +13,11 @@ namespace TravelService.Services
 {
     public interface IExpenseService
     {
-        Task<List<ExpenseDto>> GetForPlanAsync(int planId, int userId);
-        Task<ExpenseDto> GetByIdAsync(int planId, int expenseId, int userId);
-        Task<ExpenseDto> CreateAsync(int planId, int userId, ExpenseInputDto dto);
-        Task<ExpenseDto> UpdateAsync(int planId, int expenseId, int userId, ExpenseInputDto dto);
-        Task DeleteAsync(int planId, int expenseId, int userId);
+        Task<List<ExpenseDto>> GetForPlanAsync(int planId);
+        Task<ExpenseDto> GetByIdAsync(int planId, int expenseId);
+        Task<ExpenseDto> CreateAsync(int planId, ExpenseInputDto dto);
+        Task<ExpenseDto> UpdateAsync(int planId, int expenseId, ExpenseInputDto dto);
+        Task DeleteAsync(int planId, int expenseId);
     }
 
     public class ExpenseService : IExpenseService
@@ -31,9 +31,9 @@ namespace TravelService.Services
             _planAccess = planAccess;
         }
 
-        public async Task<List<ExpenseDto>> GetForPlanAsync(int planId, int userId)
+        public async Task<List<ExpenseDto>> GetForPlanAsync(int planId)
         {
-            await _planAccess.RequirePlanAsync(planId, userId);
+            await _planAccess.RequirePlanAsync(planId, PlanAction.Read);
 
             var expenses = await _dbContext.Expenses
                 .Where(e => e.TravelPlanId == planId)
@@ -43,17 +43,17 @@ namespace TravelService.Services
             return expenses.Select(e => e.ToDto()).ToList();
         }
 
-        public async Task<ExpenseDto> GetByIdAsync(int planId, int expenseId, int userId)
+        public async Task<ExpenseDto> GetByIdAsync(int planId, int expenseId)
         {
-            await _planAccess.RequirePlanAsync(planId, userId);
+            await _planAccess.RequirePlanAsync(planId, PlanAction.Read);
 
             var expense = await FindOrThrowAsync(planId, expenseId);
             return expense.ToDto();
         }
 
-        public async Task<ExpenseDto> CreateAsync(int planId, int userId, ExpenseInputDto dto)
+        public async Task<ExpenseDto> CreateAsync(int planId, ExpenseInputDto dto)
         {
-            await _planAccess.RequirePlanAsync(planId, userId);
+            await _planAccess.RequirePlanAsync(planId, PlanAction.ModifyChildren);
 
             var category = ParseCategory(dto.Category);
             ValidateAmount(dto.Amount);
@@ -75,9 +75,9 @@ namespace TravelService.Services
         }
 
         public async Task<ExpenseDto> UpdateAsync(
-            int planId, int expenseId, int userId, ExpenseInputDto dto)
+            int planId, int expenseId, ExpenseInputDto dto)
         {
-            await _planAccess.RequirePlanAsync(planId, userId);
+            await _planAccess.RequirePlanAsync(planId, PlanAction.ModifyChildren);
 
             var category = ParseCategory(dto.Category);
             ValidateAmount(dto.Amount);
@@ -95,9 +95,9 @@ namespace TravelService.Services
             return expense.ToDto();
         }
 
-        public async Task DeleteAsync(int planId, int expenseId, int userId)
+        public async Task DeleteAsync(int planId, int expenseId)
         {
-            await _planAccess.RequirePlanAsync(planId, userId);
+            await _planAccess.RequirePlanAsync(planId, PlanAction.ModifyChildren);
 
             var expense = await FindOrThrowAsync(planId, expenseId);
 

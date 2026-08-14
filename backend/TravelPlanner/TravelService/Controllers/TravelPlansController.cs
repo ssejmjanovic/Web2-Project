@@ -10,7 +10,7 @@ namespace TravelService.Controllers
     [ApiController]
     [Route("api/travel-plans")]
     [Authorize]
-    public class TravelPlansController : ApiControllerBase
+    public class TravelPlansController : ControllerBase
     {
         private readonly ITravelPlanService _travelPlanService;
 
@@ -21,28 +21,28 @@ namespace TravelService.Controllers
 
         [HttpGet]
         public async Task<ActionResult<List<TravelPlanSummaryDto>>> GetAll()
-            => Ok(await _travelPlanService.GetAllForUserAsync(CurrentUserId));
+            => Ok(await _travelPlanService.GetAllForUserAsync());
 
         [HttpGet("{id}")]
         public async Task<ActionResult<TravelPlanDto>> GetById(int id)
-            => Ok(await _travelPlanService.GetByIdAsync(id, CurrentUserId));
+            => Ok(await _travelPlanService.GetByIdAsync(id));
 
         [HttpPost]
         public async Task<ActionResult<TravelPlanDto>> Create([FromBody] TravelPlanInputDto dto)
         {
-            var created = await _travelPlanService.CreateAsync(CurrentUserId, dto);
+            var created = await _travelPlanService.CreateAsync(dto);
             return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
         }
 
         [HttpPut("{id}")]
         public async Task<ActionResult<TravelPlanDto>> Update(
             int id, [FromBody] TravelPlanInputDto dto)
-            => Ok(await _travelPlanService.UpdateAsync(id, CurrentUserId, dto));
+            => Ok(await _travelPlanService.UpdateAsync(id, dto));
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            await _travelPlanService.DeleteAsync(id, CurrentUserId);
+            await _travelPlanService.DeleteAsync(id);
             return NoContent();
         }
     }

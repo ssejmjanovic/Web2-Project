@@ -13,11 +13,11 @@ namespace TravelService.Services
 
     public interface IDestinationService
     {
-        Task<List<DestinationDto>> GetForPlanAsync(int planId, int userId);
-        Task<DestinationDto> GetByIdAsync(int planId, int destinationId, int userId);
-        Task<DestinationDto> CreateAsync(int planId, int userId, DestinationInputDto dto);
-        Task<DestinationDto> UpdateAsync(int planId, int destinationId, int userId, DestinationInputDto dto);
-        Task DeleteAsync(int planId, int destinationId, int userId);
+        Task<List<DestinationDto>> GetForPlanAsync(int planId);
+        Task<DestinationDto> GetByIdAsync(int planId, int destinationId);
+        Task<DestinationDto> CreateAsync(int planId, DestinationInputDto dto);
+        Task<DestinationDto> UpdateAsync(int planId, int destinationId, DestinationInputDto dto);
+        Task DeleteAsync(int planId, int destinationId);
     }
 
 
@@ -32,9 +32,9 @@ namespace TravelService.Services
             _planAccess = planAccess;
         }
 
-        public async Task<List<DestinationDto>> GetForPlanAsync(int planId, int userId)
+        public async Task<List<DestinationDto>> GetForPlanAsync(int planId)
         {
-            await _planAccess.RequirePlanAsync(planId, userId);
+            await _planAccess.RequirePlanAsync(planId, PlanAction.Read);
 
             var destinations = await _dbContext.Destinations
                 .Where(d => d.TravelPlanId == planId)
@@ -44,18 +44,18 @@ namespace TravelService.Services
             return destinations.Select(d => d.ToDto()).ToList();
         }
 
-        public async Task<DestinationDto> GetByIdAsync(int planId, int destinationId, int userId)
+        public async Task<DestinationDto> GetByIdAsync(int planId, int destinationId)
         {
-            await _planAccess.RequirePlanAsync(planId, userId);
+            await _planAccess.RequirePlanAsync(planId, PlanAction.Read);
 
             var destination = await FindOrThrowAsync(planId, destinationId);
             return destination.ToDto();
         }
 
         public async Task<DestinationDto> CreateAsync(
-           int planId, int userId, DestinationInputDto dto)
+           int planId, DestinationInputDto dto)
         {
-            var plan = await _planAccess.RequirePlanAsync(planId, userId);
+            var plan = await _planAccess.RequirePlanAsync(planId, PlanAction.ModifyChildren);
             ValidateDates(plan, dto);
 
             var destination = new Destination
@@ -76,9 +76,9 @@ namespace TravelService.Services
         }
 
         public async Task<DestinationDto> UpdateAsync(
-           int planId, int destinationId, int userId, DestinationInputDto dto)
+           int planId, int destinationId, DestinationInputDto dto)
         {
-            var plan = await _planAccess.RequirePlanAsync(planId, userId);
+            var plan = await _planAccess.RequirePlanAsync(planId, PlanAction.ModifyChildren);
             ValidateDates(plan, dto);
 
             var destination = await FindOrThrowAsync(planId, destinationId);
@@ -95,9 +95,9 @@ namespace TravelService.Services
             return destination.ToDto();
         }
 
-        public async Task DeleteAsync(int planId, int destinationId, int userId)
+        public async Task DeleteAsync(int planId, int destinationId)
         {
-            await _planAccess.RequirePlanAsync(planId, userId);
+            await _planAccess.RequirePlanAsync(planId, PlanAction.ModifyChildren);
 
             var destination = await FindOrThrowAsync(planId, destinationId);
 

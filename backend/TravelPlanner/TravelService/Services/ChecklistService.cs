@@ -12,11 +12,11 @@ namespace TravelService.Services
 {
     public interface IChecklistService
     {
-        Task<List<ChecklistItemDto>> GetForPlanAsync(int planId, int userId);
-        Task<ChecklistItemDto> GetByIdAsync(int planId, int itemId, int userId);
-        Task<ChecklistItemDto> CreateAsync(int planId, int userId, ChecklistItemInputDto dto);
-        Task<ChecklistItemDto> UpdateAsync(int planId, int itemId, int userId, ChecklistItemInputDto dto);
-        Task DeleteAsync(int planId, int itemId, int userId);
+        Task<List<ChecklistItemDto>> GetForPlanAsync(int planId);
+        Task<ChecklistItemDto> GetByIdAsync(int planId, int itemId);
+        Task<ChecklistItemDto> CreateAsync(int planId, ChecklistItemInputDto dto);
+        Task<ChecklistItemDto> UpdateAsync(int planId, int itemId, ChecklistItemInputDto dto);
+        Task DeleteAsync(int planId, int itemId);
     }
 
     public class ChecklistService : IChecklistService
@@ -30,9 +30,9 @@ namespace TravelService.Services
             _planAccess = planAccess;
         }
 
-        public async Task<List<ChecklistItemDto>> GetForPlanAsync(int planId, int userId)
+        public async Task<List<ChecklistItemDto>> GetForPlanAsync(int planId)
         {
-            await _planAccess.RequirePlanAsync(planId, userId);
+            await _planAccess.RequirePlanAsync(planId, PlanAction.Read);
 
             var items = await _dbContext.ChecklistItems
                 .Where(c => c.TravelPlanId == planId)
@@ -42,18 +42,18 @@ namespace TravelService.Services
             return items.Select(c => c.ToDto()).ToList();
         }
 
-        public async Task<ChecklistItemDto> GetByIdAsync(int planId, int itemId, int userId)
+        public async Task<ChecklistItemDto> GetByIdAsync(int planId, int itemId)
         {
-            await _planAccess.RequirePlanAsync(planId, userId);
+            await _planAccess.RequirePlanAsync(planId, PlanAction.Read);
 
             var item = await FindOrThrowAsync(planId, itemId);
             return item.ToDto();
         }
 
         public async Task<ChecklistItemDto> CreateAsync(
-            int planId, int userId, ChecklistItemInputDto dto)
+            int planId, ChecklistItemInputDto dto)
         {
-            await _planAccess.RequirePlanAsync(planId, userId);
+            await _planAccess.RequirePlanAsync(planId, PlanAction.ModifyChildren);
 
             var item = new ChecklistItem
             {
@@ -69,9 +69,9 @@ namespace TravelService.Services
         }
 
         public async Task<ChecklistItemDto> UpdateAsync(
-            int planId, int itemId, int userId, ChecklistItemInputDto dto)
+            int planId, int itemId, ChecklistItemInputDto dto)
         {
-            await _planAccess.RequirePlanAsync(planId, userId);
+            await _planAccess.RequirePlanAsync(planId, PlanAction.ModifyChildren);
 
             var item = await FindOrThrowAsync(planId, itemId);
 
@@ -83,9 +83,9 @@ namespace TravelService.Services
             return item.ToDto();
         }
 
-        public async Task DeleteAsync(int planId, int itemId, int userId)
+        public async Task DeleteAsync(int planId, int itemId)
         {
-            await _planAccess.RequirePlanAsync(planId, userId);
+            await _planAccess.RequirePlanAsync(planId, PlanAction.ModifyChildren);
 
             var item = await FindOrThrowAsync(planId, itemId);
 

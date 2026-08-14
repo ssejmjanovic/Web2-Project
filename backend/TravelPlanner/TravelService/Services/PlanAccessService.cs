@@ -10,22 +10,31 @@ using TravelService.Models;
 namespace TravelService.Services
 {
 
+    public enum PlanAction
+    {
+        Read,
+        ModifyChildren,
+        ModifyPlan
+    }
+
     public interface IPlanAccessService
     {
-        Task<TravelPlan> RequirePlanAsync(int planId, int userId, bool includeChildren = false);
+        Task<TravelPlan> RequirePlanAsync(int planId, PlanAction action, bool includeChildren = false);
     }
 
     public class PlanAccessService : IPlanAccessService
     {
         private readonly TravelDbContext _dbContext;
+        private readonly ICallerContext _caller;
 
-        public PlanAccessService(TravelDbContext dbContext)
+        public PlanAccessService(TravelDbContext dbContext, ICallerContext caller)
         {
             _dbContext = dbContext;
+            _caller = caller;
         }
 
 
-        public async Task<TravelPlan> RequirePlanAsync(int planId, int userId, bool includeChildren = false)
+        public async Task<TravelPlan> RequirePlanAsync(int planId, PlanAction action, bool includeChildren = false)
         {
             var query = _dbContext.TravelPlans.AsQueryable();
 
@@ -40,7 +49,22 @@ namespace TravelService.Services
 
             var plan = await query.FirstOrDefaultAsync(p => p.Id == planId);
 
-            if (plan == null || plan.UserId != userId)
+            if (plan == null)
+                throw new NotFoundException($"Travel plan with id {planId} was not found.");
+
+            if (_caller.IsShareVisitor)
+            {
+                if (_caller.SharePlanId != planId)
+                    throw new NotFoundException($"Travel plan with id {planId} was not found.");
+                if (action == PlanAction.ModifyPlan)
+                    throw new ForbiddenException("A shared link cannot change or delete the travel plan itself.");
+                if (action == PlanAction.ModifyChildren && _caller.ShareAccess != ShareAccess.Edit)
+                    throw new ForbiddenException("This share link is read-only.");
+
+                return plan;
+            }
+
+            if (plan.UserId != _caller.UserId)
                 throw new NotFoundException($"Travel plan with id {planId} was not found.");
 
             return plan;

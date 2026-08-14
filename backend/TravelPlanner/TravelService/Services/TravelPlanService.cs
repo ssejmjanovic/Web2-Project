@@ -13,11 +13,11 @@ namespace TravelService.Services
 {
     public interface ITravelPlanService
     {
-        Task<List<TravelPlanSummaryDto>> GetAllForUserAsync(int userId);
-        Task<TravelPlanDto> GetByIdAsync(int planId, int userId);
-        Task<TravelPlanDto> CreateAsync(int userId, TravelPlanInputDto dto);
-        Task<TravelPlanDto> UpdateAsync(int planId, int userId, TravelPlanInputDto dto);
-        Task DeleteAsync(int planId, int userId);
+        Task<List<TravelPlanSummaryDto>> GetAllForUserAsync();
+        Task<TravelPlanDto> GetByIdAsync(int planId);
+        Task<TravelPlanDto> CreateAsync(TravelPlanInputDto dto);
+        Task<TravelPlanDto> UpdateAsync(int planId, TravelPlanInputDto dto);
+        Task DeleteAsync(int planId);
     }
 
 
@@ -25,17 +25,19 @@ namespace TravelService.Services
     {
         private readonly TravelDbContext _dbContext;
         private readonly IPlanAccessService _planAccess;
+        private readonly ICallerContext _caller;
 
-        public TravelPlanService(TravelDbContext dbContext, IPlanAccessService planAccess)
+        public TravelPlanService(TravelDbContext dbContext, IPlanAccessService planAccess, ICallerContext caller)
         {
             _dbContext = dbContext;
             _planAccess = planAccess;
+            _caller = caller;
         }
 
-        public async Task<List<TravelPlanSummaryDto>> GetAllForUserAsync(int userId)
+        public async Task<List<TravelPlanSummaryDto>> GetAllForUserAsync()
         {
             return await _dbContext.TravelPlans
-                .Where(p => p.UserId == userId)
+                .Where(p => p.UserId == _caller.UserId)
                 .OrderByDescending(p => p.StartDate)
                 .Select(p => new TravelPlanSummaryDto
                 {
@@ -56,19 +58,19 @@ namespace TravelService.Services
                 .ToListAsync();
         }
 
-        public async Task<TravelPlanDto> GetByIdAsync(int planId, int userId)
+        public async Task<TravelPlanDto> GetByIdAsync(int planId)
         {
-            var plan = await _planAccess.RequirePlanAsync(planId, userId, includeChildren: true);
+            var plan = await _planAccess.RequirePlanAsync(planId, PlanAction.Read, includeChildren: true);
             return plan.ToDto();
         }
 
-        public async Task<TravelPlanDto> CreateAsync(int userId, TravelPlanInputDto dto)
+        public async Task<TravelPlanDto> CreateAsync(TravelPlanInputDto dto)
         {
             ValidateDateRange(dto.StartDate, dto.EndDate);
 
             var plan = new TravelPlan
             {
-                UserId = userId,
+                UserId = _caller.UserId,
                 Name = dto.Name.Trim(),
                 Description = dto.Description?.Trim(),
                 StartDate = dto.StartDate.Date,
@@ -84,11 +86,11 @@ namespace TravelService.Services
             return plan.ToDto();
         }
 
-        public async Task<TravelPlanDto> UpdateAsync(int planId, int userId, TravelPlanInputDto dto)
+        public async Task<TravelPlanDto> UpdateAsync(int planId, TravelPlanInputDto dto)
         {
             ValidateDateRange(dto.StartDate, dto.EndDate);
 
-            var plan = await _planAccess.RequirePlanAsync(planId, userId, includeChildren: true);
+            var plan = await _planAccess.RequirePlanAsync(planId, PlanAction.ModifyPlan, includeChildren: true);
 
             var newStart = dto.StartDate.Date;
             var newEnd = dto.EndDate.Date;
@@ -109,9 +111,9 @@ namespace TravelService.Services
             return plan.ToDto();
         }
 
-        public async Task DeleteAsync(int planId, int userId)
+        public async Task DeleteAsync(int planId)
         {
-            var plan = await _planAccess.RequirePlanAsync(planId, userId, includeChildren: true);
+            var plan = await _planAccess.RequirePlanAsync(planId, PlanAction.ModifyPlan, includeChildren: true);
 
             _dbContext.TravelPlans.Remove(plan);
             await _dbContext.SaveChangesAsync();
