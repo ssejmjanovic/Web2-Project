@@ -9,21 +9,39 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ApiGateway.Services;
 
 namespace ApiGateway
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHttpClient();
+
+            services.AddSingleton<IServiceRouteResolver, ServiceRouteResolver>();
+            services.AddScoped<IProxyService, ProxyService>();
+
+            var allowedOrigins = Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("Frontend", policy =>
+                    policy.WithOrigins(allowedOrigins)
+                          .AllowAnyHeader()
+                          .AllowAnyMethod());
+            });
+
             services.AddControllers();
         }
 
@@ -37,7 +55,7 @@ namespace ApiGateway
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            app.UseCors("Frontend");
 
             app.UseEndpoints(endpoints =>
             {
