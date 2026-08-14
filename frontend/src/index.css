@@ -35,3 +35,35 @@
     min-height: 100vh;
   }
 }
+
+@layer components {
+  .btn-aero {
+    background: linear-gradient(
+      180deg,
+      var(--color-sky-aero) 0%,
+      var(--color-sky-mid) 55%,
+      var(--color-sky-deep) 100%
+    );
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow:
+      0 2px 8px rgba(56, 189, 248, 0.35),
+      inset 0 1.5px 2px rgba(255, 255, 255, 0.5);
+    color: white;
+    transition: all 0.18s ease;
+  }
+
+  .btn-aero:hover {
+    background: linear-gradient(
+      180deg,
+      #7dd3fc 0%,
+      var(--color-sky-aero) 55%,
+      var(--color-sky-mid) 100%
+    );
+    transform: translateY(-1px);
+  }
+
+  .btn-aero:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 4px rgba(56, 189, 248, 0.25);
+  }
+}
