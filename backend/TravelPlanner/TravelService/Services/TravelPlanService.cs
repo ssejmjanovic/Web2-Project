@@ -36,8 +36,10 @@ namespace TravelService.Services
 
         public async Task<List<TravelPlanSummaryDto>> GetAllForUserAsync()
         {
+            var userId = _caller.UserId;
+
             return await _dbContext.TravelPlans
-                .Where(p => p.UserId == _caller.UserId)
+                .Where(p => p.UserId == userId)
                 .OrderByDescending(p => p.StartDate)
                 .Select(p => new TravelPlanSummaryDto
                 {
