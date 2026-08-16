@@ -6,6 +6,7 @@ import { AdminDashboard } from './pages/AdminDashboard';
 import { Dashboard } from './pages/Dashboard';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
+import { CreatePlan } from './pages/CreatePlan';
 
 function App() {
   return (
@@ -33,6 +34,17 @@ function App() {
                 <AdminDashboard />
               </Layout>
             </AdminRoute>
+          }
+        />
+
+        <Route
+          path="/travel-plans/new"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <CreatePlan />
+              </Layout>
+            </ProtectedRoute>
           }
         />
 
