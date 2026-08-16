@@ -7,6 +7,7 @@ import { Spinner } from '../components/ui/Spinner';
 import type { TravelPlan } from '../models/travel';
 import { travelPlanService } from '../services/travelPlanService';
 import { getErrorMessage } from '../utils/getErrorMessage';
+import { DestinationsTab } from '../components/destinations/DestinationsTab';
 
 export function PlanDetail() {
   const { id } = useParams<{ id: string }>();
@@ -67,12 +68,17 @@ export function PlanDetail() {
 
       <PlanTabs active={activeTab} onChange={setActiveTab} />
 
-      {activeTab === 'destinations' && <TabPlaceholder name="Destinations" />}
+      {activeTab === 'destinations' && (
+        <DestinationsTab
+          planId={plan.id}
+          destinations={plan.destinations}
+          onChanged={reload}
+        />
+      )}
       {activeTab === 'activities' && <TabPlaceholder name="Activities" />}
       {activeTab === 'expenses' && <TabPlaceholder name="Expenses" />}
       {activeTab === 'checklist' && <TabPlaceholder name="Checklist" />}
 
-      <button type="button" onClick={reload} className="hidden" aria-hidden />
     </div>
   );
 }
