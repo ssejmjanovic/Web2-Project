@@ -89,4 +89,19 @@
       0 0 0 3px rgba(56, 189, 248, 0.2);
     outline: none;
   }
+
+  .glass-card {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.62) 0%,
+      rgba(255, 255, 255, 0.38) 100%
+    );
+    backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(56, 189, 248, 0.28);
+    box-shadow:
+      0 4px 32px rgba(56, 189, 248, 0.1),
+      0 1.5px 8px rgba(0, 0, 0, 0.05),
+      inset 0 1.5px 3px rgba(255, 255, 255, 0.7);
+    border-radius: 1.25rem;
+  }
 }
