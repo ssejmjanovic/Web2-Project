@@ -80,6 +80,7 @@ export function PlanDetail() {
         <ActivitiesTab
           planId={plan.id}
           activities={plan.activities}
+          planStartDate={plan.startDate}
           onChanged={reload}
         />
       )}
