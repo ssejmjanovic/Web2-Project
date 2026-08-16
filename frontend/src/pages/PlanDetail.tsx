@@ -8,6 +8,7 @@ import type { TravelPlan } from '../models/travel';
 import { travelPlanService } from '../services/travelPlanService';
 import { getErrorMessage } from '../utils/getErrorMessage';
 import { DestinationsTab } from '../components/destinations/DestinationsTab';
+import { ActivitiesTab } from '../components/activities/ActivitiesTab';
 
 export function PlanDetail() {
   const { id } = useParams<{ id: string }>();
@@ -75,7 +76,13 @@ export function PlanDetail() {
           onChanged={reload}
         />
       )}
-      {activeTab === 'activities' && <TabPlaceholder name="Activities" />}
+      {activeTab === 'activities' && (
+        <ActivitiesTab
+          planId={plan.id}
+          activities={plan.activities}
+          onChanged={reload}
+        />
+      )}
       {activeTab === 'expenses' && <TabPlaceholder name="Expenses" />}
       {activeTab === 'checklist' && <TabPlaceholder name="Checklist" />}
 
