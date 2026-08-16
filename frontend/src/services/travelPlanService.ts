@@ -8,7 +8,7 @@ export const travelPlanService = {
     },
 
     getById: async (id: number): Promise<TravelPlan> => {
-        const response = await api.get<TravelPlan>(`/api/travel/travel-plans/${id}`);
+        const response = await api.get<TravelPlan>(`/api/travel-plans/${id}`);
         return response.data;
     },
 

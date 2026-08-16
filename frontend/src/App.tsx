@@ -7,6 +7,7 @@ import { Dashboard } from './pages/Dashboard';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { CreatePlan } from './pages/CreatePlan';
+import { PlanDetail } from './pages/PlanDetail';
 
 function App() {
   return (
@@ -43,6 +44,17 @@ function App() {
             <ProtectedRoute>
               <Layout>
                 <CreatePlan />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/travel-plans/:id"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <PlanDetail />
               </Layout>
             </ProtectedRoute>
           }
