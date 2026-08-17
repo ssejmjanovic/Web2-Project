@@ -10,6 +10,7 @@ import { getErrorMessage } from '../utils/getErrorMessage';
 import { DestinationsTab } from '../components/destinations/DestinationsTab';
 import { ActivitiesTab } from '../components/activities/ActivitiesTab';
 import { ExpensesTab } from '../components/expenses/ExpensesTab';
+import { ChecklistTab } from '../components/checklist/ChecklistTab';
 
 export function PlanDetail() {
   const { id } = useParams<{ id: string }>();
@@ -94,16 +95,14 @@ export function PlanDetail() {
           onChanged={reload}
         />
       )}
-      {activeTab === 'checklist' && <TabPlaceholder name="Checklist" />}
+      {activeTab === 'checklist' && (
+        <ChecklistTab
+          planId={plan.id}
+          items={plan.checklistItems}
+          onChanged={reload}
+        />
+      )}
 
-    </div>
-  );
-}
-
-function TabPlaceholder({ name }: { name: string }) {
-  return (
-    <div className="glass-card p-8 text-center text-sm text-ink-light">
-      {name} coming next.
     </div>
   );
 }
