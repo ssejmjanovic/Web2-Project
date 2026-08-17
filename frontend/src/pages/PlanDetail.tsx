@@ -9,6 +9,7 @@ import { travelPlanService } from '../services/travelPlanService';
 import { getErrorMessage } from '../utils/getErrorMessage';
 import { DestinationsTab } from '../components/destinations/DestinationsTab';
 import { ActivitiesTab } from '../components/activities/ActivitiesTab';
+import { ExpensesTab } from '../components/expenses/ExpensesTab';
 
 export function PlanDetail() {
   const { id } = useParams<{ id: string }>();
@@ -84,7 +85,15 @@ export function PlanDetail() {
           onChanged={reload}
         />
       )}
-      {activeTab === 'expenses' && <TabPlaceholder name="Expenses" />}
+      {activeTab === 'expenses' && (
+        <ExpensesTab
+          planId={plan.id}
+          expenses={plan.expenses}
+          totalExpenses={plan.totalExpenses}
+          remainingBudget={plan.remainingBudget}
+          onChanged={reload}
+        />
+      )}
       {activeTab === 'checklist' && <TabPlaceholder name="Checklist" />}
 
     </div>
