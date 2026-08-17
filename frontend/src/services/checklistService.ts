@@ -1,7 +1,7 @@
 import api from './api';
 import type { ChecklistItem, ChecklistItemInput } from '../models/travel';
 
-export const destinationService = {
+export const checklistService = {
   getForPlan: async (planId: number): Promise<ChecklistItem[]> => {
     const response = await api.get<ChecklistItem[]>(`/api/travel-plans/${planId}/checklist`);
     return response.data;
