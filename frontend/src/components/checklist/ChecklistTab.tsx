@@ -11,10 +11,11 @@ import { getErrorMessage } from '../../utils/getErrorMessage';
 interface ChecklistTabProps {
   planId: number;
   items: ChecklistItem[];
+  canEdit?: boolean;
   onChanged: () => void;
 }
 
-export function ChecklistTab({ planId, items, onChanged }: ChecklistTabProps) {
+export function ChecklistTab({ planId, items, canEdit = true, onChanged }: ChecklistTabProps) {
   const [newItemName, setNewItemName] = useState('');
   const [adding, setAdding] = useState(false);
   const [busyId, setBusyId] = useState<number | null>(null);
@@ -94,21 +95,23 @@ export function ChecklistTab({ planId, items, onChanged }: ChecklistTabProps) {
         />
       </div>
 
-      <form onSubmit={handleAdd} className="flex items-end gap-2">
-        <Input
-          label="New item"
-          maxLength={300}
-          placeholder="Passport, travel insurance, charger..."
-          value={newItemName}
-          onChange={(event) => setNewItemName(event.target.value)}
-          className="flex-1"
-        />
+      {canEdit && (
+        <form onSubmit={handleAdd} className="flex items-end gap-2">
+          <Input
+            label="New item"
+            maxLength={300}
+            placeholder="Passport, travel insurance, charger..."
+            value={newItemName}
+            onChange={(event) => setNewItemName(event.target.value)}
+            className="flex-1"
+          />
 
-        <Button type="submit" disabled={adding} className="px-4 py-2.5 shrink-0">
-          <Plus className="w-4 h-4" />
-          Add
-        </Button>
-      </form>
+          <Button type="submit" disabled={adding} className="px-4 py-2.5 shrink-0">
+            <Plus className="w-4 h-4" />
+            Add
+          </Button>
+        </form>
+      )}
 
       {error && (
         <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
@@ -128,8 +131,8 @@ export function ChecklistTab({ planId, items, onChanged }: ChecklistTabProps) {
             key={item.id}
             item={item}
             busy={busyId === item.id}
-            onToggle={() => handleToggle(item)}
-            onDelete={() => handleDelete(item.id)}
+            onToggle={canEdit ? () => handleToggle(item) : undefined}
+            onDelete={canEdit ? () => handleDelete(item.id) : undefined}
           />
         ))}
       </div>

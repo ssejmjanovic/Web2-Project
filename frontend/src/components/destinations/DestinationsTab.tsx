@@ -10,6 +10,7 @@ import { getErrorMessage } from '../../utils/getErrorMessage';
 interface DestinationsTabProps {
   planId: number;
   destinations: Destination[];
+  canEdit?: boolean;
   onChanged: () => void;
 }
 
@@ -24,7 +25,7 @@ function toInput(destination: Destination): DestinationInput {
   };
 }
 
-export function DestinationsTab({ planId, destinations, onChanged }: DestinationsTabProps) {
+export function DestinationsTab({ planId, destinations, canEdit = true, onChanged }: DestinationsTabProps) {
   const [adding, setAdding] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -59,7 +60,7 @@ export function DestinationsTab({ planId, destinations, onChanged }: Destination
       <div className="flex items-center justify-between">
         <h3 className="font-display font-black text-sky-deep">Destinations</h3>
 
-        {!adding && (
+        {canEdit && !adding && (
           <Button onClick={() => setAdding(true)} className="px-4 py-2 text-sm">
             <Plus className="w-4 h-4" />
             Add
@@ -100,8 +101,8 @@ export function DestinationsTab({ planId, destinations, onChanged }: Destination
           <DestinationItem
             key={destination.id}
             destination={destination}
-            onEdit={() => setEditingId(destination.id)}
-            onDelete={() => handleDelete(destination.id)}
+            onEdit={canEdit ? () => setEditingId(destination.id) : undefined}
+            onDelete={canEdit ? () => handleDelete(destination.id): undefined}
           />
         ),
       )}

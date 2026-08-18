@@ -13,6 +13,7 @@ interface ActivitiesTabProps {
   planId: number;
   activities: Activity[];
   planStartDate: string;
+  canEdit?: boolean;
   onChanged: () => void;
 }
 
@@ -44,7 +45,7 @@ function groupByDay(activities: Activity[]): Record<string, Activity[]> {
   return grouped;
 }
 
-export function ActivitiesTab({ planId, activities, planStartDate, onChanged }: ActivitiesTabProps) {
+export function ActivitiesTab({ planId, activities, planStartDate, canEdit = true, onChanged }: ActivitiesTabProps) {
   const [adding, setAdding] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -110,7 +111,7 @@ export function ActivitiesTab({ planId, activities, planStartDate, onChanged }: 
             </button>
           </div>
 
-          {!adding && (
+          {canEdit && !adding && (
             <Button onClick={() => setAdding(true)} className="px-4 py-2 text-sm">
               <Plus className="w-4 h-4" />
               Add
@@ -163,8 +164,8 @@ export function ActivitiesTab({ planId, activities, planStartDate, onChanged }: 
                     <ActivityItem
                       key={activity.id}
                       activity={activity}
-                      onEdit={() => setEditingId(activity.id)}
-                      onDelete={() => handleDelete(activity.id)}
+                      onEdit={canEdit ? () => setEditingId(activity.id) : undefined}
+                      onDelete={canEdit ? () => handleDelete(activity.id) : undefined}
                     />
                   ),
                 )}

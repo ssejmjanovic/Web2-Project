@@ -5,8 +5,8 @@ import { formatCurrency, formatDate } from '../../utils/format';
 
 interface ExpenseItemProps {
   expense: Expense;
-  onEdit: () => void;
-  onDelete: () => void;
+  onEdit?: () => void;
+  onDelete?: () => void;
 }
 
 export function ExpenseItem({ expense, onEdit, onDelete }: ExpenseItemProps) {
@@ -35,12 +35,16 @@ export function ExpenseItem({ expense, onEdit, onDelete }: ExpenseItemProps) {
           {formatCurrency(expense.amount)}
         </span>
 
-        <Button variant="secondary" onClick={onEdit} className="px-3 py-1.5">
-          <Pencil className="w-4 h-4" />
-        </Button>
-        <Button variant="danger" onClick={onDelete} className="px-3 py-1.5">
-          <Trash2 className="w-4 h-4" />
-        </Button>
+        {onEdit && (
+          <Button variant="secondary" onClick={onEdit} className="px-3 py-1.5">
+            <Pencil className="w-4 h-4" />
+          </Button>
+        )}
+        {onDelete && (
+          <Button variant="danger" onClick={onDelete} className="px-3 py-1.5">
+            <Trash2 className="w-4 h-4" />
+          </Button>
+        )}
       </div>
     </div>
   );

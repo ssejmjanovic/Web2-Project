@@ -12,13 +12,15 @@ const tabs: { key: PlanTabKey; label: string; icon: React.ReactNode }[] = [
 
 interface PlanTabsProps {
   active: PlanTabKey;
+  showSharing?: boolean;
   onChange: (tab: PlanTabKey) => void;
 }
 
-export function PlanTabs({ active, onChange }: PlanTabsProps) {
+export function PlanTabs({ active, showSharing = true, onChange }: PlanTabsProps) {
+  const visibleTabs = showSharing ? tabs : tabs.filter((tab) => tab.key !== 'sharing');
   return (
     <div className="flex gap-2 mb-6 overflow-x-auto">
-      {tabs.map((tab) => (
+      {visibleTabs.map((tab) => (
         <button
           key={tab.key}
           type="button"

@@ -13,6 +13,7 @@ interface ExpensesTabProps {
   expenses: Expense[];
   totalExpenses: number;
   remainingBudget: number;
+  canEdit?: boolean;
   onChanged: () => void;
 }
 
@@ -43,6 +44,7 @@ export function ExpensesTab({
   expenses,
   totalExpenses,
   remainingBudget,
+  canEdit = true,
   onChanged,
 }: ExpensesTabProps) {
   const [adding, setAdding] = useState(false);
@@ -81,7 +83,7 @@ export function ExpensesTab({
       <div className="flex items-center justify-between">
         <h3 className="font-display font-black text-sky-deep">Expenses</h3>
 
-        {!adding && (
+        {canEdit && !adding && (
           <Button onClick={() => setAdding(true)} className="px-4 py-2 text-sm">
             <Plus className="w-4 h-4" />
             Add
@@ -154,8 +156,8 @@ export function ExpensesTab({
             <ExpenseItem
               key={expense.id}
               expense={expense}
-              onEdit={() => setEditingId(expense.id)}
-              onDelete={() => handleDelete(expense.id)}
+              onEdit={canEdit ? () => setEditingId(expense.id) : undefined}
+              onDelete={canEdit ? () => handleDelete(expense.id) : undefined}
             />
           ),
         )}

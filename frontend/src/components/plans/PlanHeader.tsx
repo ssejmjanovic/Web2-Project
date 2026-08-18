@@ -5,7 +5,7 @@ import { formatCurrency, formatDate } from '../../utils/format';
 
 interface PlanHeaderProps {
   plan: TravelPlan;
-  onDelete: () => void;
+  onDelete?: () => void;
 }
 
 export function PlanHeader({ plan, onDelete }: PlanHeaderProps) {
@@ -20,11 +20,13 @@ export function PlanHeader({ plan, onDelete }: PlanHeaderProps) {
             <p className="text-sm text-ink-light mt-1">{plan.description}</p>
           )}
         </div>
-
-        <Button variant="danger" onClick={onDelete} className="px-3 py-1.5 shrink-0">
-          <Trash2 className="w-4 h-4" />
-          Delete
-        </Button>
+        
+        {onDelete && (
+          <Button variant="danger" onClick={onDelete} className="px-3 py-1.5 shrink-0">
+            <Trash2 className="w-4 h-4" />
+            Delete
+          </Button>
+        )}
       </div>
 
       <div className="flex items-center gap-1.5 text-sm text-ink-light mb-4">

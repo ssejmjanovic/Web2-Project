@@ -12,8 +12,8 @@ const statusStyles: Record<ActivityStatus, string> = {
 
 interface ActivityItemProps {
   activity: Activity;
-  onEdit: () => void;
-  onDelete: () => void;
+  onEdit?: () => void;
+  onDelete?: () => void;
 }
 
 export function ActivityItem({ activity, onEdit, onDelete }: ActivityItemProps) {
@@ -55,12 +55,16 @@ export function ActivityItem({ activity, onEdit, onDelete }: ActivityItemProps) 
       </div>
 
       <div className="flex gap-2 shrink-0">
-        <Button variant="secondary" onClick={onEdit} className="px-3 py-1.5">
-          <Pencil className="w-4 h-4" />
-        </Button>
-        <Button variant="danger" onClick={onDelete} className="px-3 py-1.5">
-          <Trash2 className="w-4 h-4" />
-        </Button>
+        {onEdit && (
+          <Button variant="secondary" onClick={onEdit} className="px-3 py-1.5">
+            <Pencil className="w-4 h-4" />
+          </Button>
+        )}
+        {onDelete && (
+          <Button variant="danger" onClick={onDelete} className="px-3 py-1.5">
+            <Trash2 className="w-4 h-4" />
+          </Button>
+        )}
       </div>
     </div>
   );

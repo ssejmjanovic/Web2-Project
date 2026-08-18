@@ -5,8 +5,8 @@ import type { ChecklistItem } from '../../models/travel';
 interface ChecklistItemRowProps {
   item: ChecklistItem;
   busy: boolean;
-  onToggle: () => void;
-  onDelete: () => void;
+  onToggle?: () => void;
+  onDelete?: () => void;
 }
 
 export function ChecklistItemRow({
@@ -20,7 +20,7 @@ export function ChecklistItemRow({
       <button
         type="button"
         onClick={onToggle}
-        disabled={busy}
+        disabled={busy || !onToggle}
         className="flex items-center gap-2 text-left min-w-0 disabled:opacity-50"
       >
         {item.isCompleted ? (
@@ -38,9 +38,11 @@ export function ChecklistItemRow({
         </span>
       </button>
 
-      <Button variant="danger" onClick={onDelete} className="px-3 py-1.5 shrink-0">
-        <Trash2 className="w-4 h-4" />
-      </Button>
+      {onDelete && (
+        <Button variant="danger" onClick={onDelete} className="px-3 py-1.5">
+          <Trash2 className="w-4 h-4" />
+        </Button>
+      )}
     </div>
   );
 }

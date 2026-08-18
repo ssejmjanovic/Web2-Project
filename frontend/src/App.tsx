@@ -8,6 +8,7 @@ import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { CreatePlan } from './pages/CreatePlan';
 import { PlanDetail } from './pages/PlanDetail';
+import { SharedPlan } from './pages/SharedPlan';
 
 function App() {
   return (
@@ -59,6 +60,8 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        <Route path="/shared/:token" element={<SharedPlan />} />
 
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
