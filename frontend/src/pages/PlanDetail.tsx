@@ -11,6 +11,7 @@ import { DestinationsTab } from '../components/destinations/DestinationsTab';
 import { ActivitiesTab } from '../components/activities/ActivitiesTab';
 import { ExpensesTab } from '../components/expenses/ExpensesTab';
 import { ChecklistTab } from '../components/checklist/ChecklistTab';
+import { ShareTab } from '../components/sharing/ShareTab';
 
 export function PlanDetail() {
   const { id } = useParams<{ id: string }>();
@@ -102,6 +103,7 @@ export function PlanDetail() {
           onChanged={reload}
         />
       )}
+      {activeTab === 'sharing' && <ShareTab planId={planId} />}
 
     </div>
   );

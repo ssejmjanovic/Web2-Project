@@ -1,12 +1,13 @@
-import { CalendarDays, CheckSquare, MapPin, Wallet } from 'lucide-react';
+import { CalendarDays, CheckSquare, MapPin, Wallet, Share2 } from 'lucide-react';
 
-export type PlanTabKey = 'destinations' | 'activities' | 'expenses' | 'checklist';
+export type PlanTabKey = 'destinations' | 'activities' | 'expenses' | 'checklist' | 'sharing';
 
 const tabs: { key: PlanTabKey; label: string; icon: React.ReactNode }[] = [
   { key: 'destinations', label: 'Destinations', icon: <MapPin className="w-4 h-4" /> },
   { key: 'activities', label: 'Activities', icon: <CalendarDays className="w-4 h-4" /> },
   { key: 'expenses', label: 'Expenses', icon: <Wallet className="w-4 h-4" /> },
   { key: 'checklist', label: 'Checklist', icon: <CheckSquare className="w-4 h-4" /> },
+  { key: 'sharing', label: 'Sharing', icon: <Share2 className="w-4 h-4" /> },
 ];
 
 interface PlanTabsProps {
