@@ -11,7 +11,7 @@ export interface Share {
 
 export interface CreateShareRequest {
     travelPlanId: number;
-    acessLevel: ShareAccessLevel;
+    accessLevel: ShareAccessLevel;
     expiresInHours?: number;
 }
 
