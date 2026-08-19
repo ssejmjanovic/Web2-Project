@@ -1,7 +1,8 @@
-import { CalendarDays, Trash2, Wallet } from 'lucide-react';
 import { Button } from '../ui/Button';
 import type { TravelPlan } from '../../models/travel';
 import { formatCurrency, formatDate } from '../../utils/format';
+import { CalendarDays, FileDown, Trash2, Wallet } from 'lucide-react';
+import { exportPlanToPdf } from '../../utils/planPdf';
 
 interface PlanHeaderProps {
   plan: TravelPlan;
@@ -16,18 +17,31 @@ export function PlanHeader({ plan, onDelete }: PlanHeaderProps) {
           <h1 className="font-display text-2xl font-black text-sky-deep">
             {plan.name}
           </h1>
+
           {plan.description && (
             <p className="text-sm text-ink-light mt-1">{plan.description}</p>
           )}
         </div>
-        
-        {onDelete && (
-          <Button variant="danger" onClick={onDelete} className="px-3 py-1.5 shrink-0">
-            <Trash2 className="w-4 h-4" />
-            Delete
+
+        <div className="flex gap-2 shrink-0">
+          <Button
+            variant="secondary"
+            onClick={() => exportPlanToPdf(plan)}
+            className="px-3 py-1.5"
+          >
+            <FileDown className="w-4 h-4" />
+            PDF
           </Button>
-        )}
+
+          {onDelete && (
+            <Button variant="danger" onClick={onDelete} className="px-3 py-1.5">
+              <Trash2 className="w-4 h-4" />
+              Delete
+            </Button>
+          )}
+        </div>
       </div>
+      
 
       <div className="flex items-center gap-1.5 text-sm text-ink-light mb-4">
         <CalendarDays className="w-4 h-4 text-sky-aero" />
