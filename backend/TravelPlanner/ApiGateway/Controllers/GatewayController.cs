@@ -19,6 +19,23 @@ namespace ApiGateway.Controllers
             _routeResolver = routeResolver;
         }
 
+        [HttpGet("/")]
+        public IActionResult Root()
+        {
+            return Ok(new
+            {
+                service = "Travel Planner API Gateway",
+                status = "running",
+                routes = new[]
+                {
+            "/api/auth",
+            "/api/users",
+            "/api/travel-plans",
+            "/api/shares"
+        }
+            });
+        }
+
         [Route("api/{**path}")]
         [AcceptVerbs("GET", "POST", "PUT", "PATCH", "DELETE")]
         public async Task<IActionResult> Forward()

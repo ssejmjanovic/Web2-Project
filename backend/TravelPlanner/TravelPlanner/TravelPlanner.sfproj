@@ -37,14 +37,14 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ApiGateway\ApiGateway.csproj">
-      <ServiceLaunchUrl>http://localhost:{ServicePort}/weatherforecast</ServiceLaunchUrl>
+      <ServiceLaunchUrl>http://localhost:{ServicePort}/</ServiceLaunchUrl>
     </ProjectReference>
     <ProjectReference Include="..\SharingService\SharingService.csproj" />
     <ProjectReference Include="..\TravelService\TravelService.csproj">
-      <ServiceLaunchUrl>http://localhost:{ServicePort}/weatherforecast</ServiceLaunchUrl>
+      <ServiceLaunchUrl>http://localhost:{ServicePort}/swagger</ServiceLaunchUrl>
     </ProjectReference>
     <ProjectReference Include="..\UserService\UserService.csproj">
-      <ServiceLaunchUrl>http://localhost:{ServicePort}/weatherforecast</ServiceLaunchUrl>
+      <ServiceLaunchUrl>http://localhost:{ServicePort}/swagger</ServiceLaunchUrl>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
