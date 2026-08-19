@@ -23,7 +23,12 @@ namespace TravelService.Controllers
         public async Task<ActionResult<List<TravelPlanSummaryDto>>> GetAll()
             => Ok(await _travelPlanService.GetAllForUserAsync());
 
-        [HttpGet("{id}")]
+        [HttpGet("all")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<List<TravelPlanSummaryDto>>> GetAllForAdmin()
+            => Ok(await _travelPlanService.GetAllForAdminAsync());
+
+        [HttpGet("{id:int}")]
         public async Task<ActionResult<TravelPlanDto>> GetById(int id)
             => Ok(await _travelPlanService.GetByIdAsync(id));
 
@@ -34,12 +39,12 @@ namespace TravelService.Controllers
             return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         public async Task<ActionResult<TravelPlanDto>> Update(
             int id, [FromBody] TravelPlanInputDto dto)
             => Ok(await _travelPlanService.UpdateAsync(id, dto));
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
             await _travelPlanService.DeleteAsync(id);

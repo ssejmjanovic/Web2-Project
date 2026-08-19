@@ -17,9 +17,11 @@ namespace TravelService.Services
     public interface ICallerContext
     {
         bool IsShareVisitor { get; }
+        bool IsAdmin { get; }
         int UserId { get; }
         int SharePlanId { get; }
         ShareAccess ShareAccess { get; }
+
     }
 
     public class CallerContext : ICallerContext
@@ -32,6 +34,7 @@ namespace TravelService.Services
         }
 
         public bool IsShareVisitor => _user?.FindFirst(ShareTokenAuthenticationHandler.PlanIdClaim) != null;
+        public bool IsAdmin => string.Equals(_user?.FindFirst("role")?.Value, "Admin", StringComparison.OrdinalIgnoreCase);
 
         public int UserId
         {

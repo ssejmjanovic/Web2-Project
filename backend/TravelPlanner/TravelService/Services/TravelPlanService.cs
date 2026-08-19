@@ -14,6 +14,7 @@ namespace TravelService.Services
     public interface ITravelPlanService
     {
         Task<List<TravelPlanSummaryDto>> GetAllForUserAsync();
+        Task<List<TravelPlanSummaryDto>> GetAllForAdminAsync();
         Task<TravelPlanDto> GetByIdAsync(int planId);
         Task<TravelPlanDto> CreateAsync(TravelPlanInputDto dto);
         Task<TravelPlanDto> UpdateAsync(int planId, TravelPlanInputDto dto);
@@ -38,26 +39,12 @@ namespace TravelService.Services
         {
             var userId = _caller.UserId;
 
-            return await _dbContext.TravelPlans
-                .Where(p => p.UserId == userId)
-                .OrderByDescending(p => p.StartDate)
-                .Select(p => new TravelPlanSummaryDto
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    Description = p.Description,
-                    StartDate = p.StartDate,
-                    EndDate = p.EndDate,
-                    Budget = p.Budget,
-                    TotalExpenses = p.Expenses.Sum(e => (decimal?)e.Amount) ?? 0m,
-                    RemainingBudget = p.Budget - (p.Expenses.Sum(e => (decimal?)e.Amount) ?? 0m),
-                    CreatedAt = p.CreatedAt,
-                    DestinationCount = p.Destinations.Count,
-                    ActivityCount = p.Activities.Count,
-                    ChecklistItemCount = p.ChecklistItems.Count,
-                    CompletedChecklistItemCount = p.ChecklistItems.Count(c => c.IsCompleted)
-                })
-                .ToListAsync();
+            return await ToSummaries(_dbContext.TravelPlans.Where(p => p.UserId == userId)).ToListAsync();
+        }
+
+        public async Task<List<TravelPlanSummaryDto>> GetAllForAdminAsync()
+        {
+            return await ToSummaries(_dbContext.TravelPlans).ToListAsync();
         }
 
         public async Task<TravelPlanDto> GetByIdAsync(int planId)
@@ -129,6 +116,29 @@ namespace TravelService.Services
         {
             if (endDate.Date < startDate.Date)
                 throw new ValidationException("End date cannot be before start date.");
+        }
+
+        private static IQueryable<TravelPlanSummaryDto> ToSummaries(IQueryable<TravelPlan> query)
+        {
+            return query
+                .OrderByDescending(p => p.StartDate)
+                .Select(p => new TravelPlanSummaryDto
+                {
+                    Id = p.Id,
+                    UserId = p.UserId,
+                    Name = p.Name,
+                    Description = p.Description,
+                    StartDate = p.StartDate,
+                    EndDate = p.EndDate,
+                    Budget = p.Budget,
+                    TotalExpenses = p.Expenses.Sum(e => (decimal?)e.Amount) ?? 0m,
+                    RemainingBudget = p.Budget - (p.Expenses.Sum(e => (decimal?)e.Amount) ?? 0m),
+                    CreatedAt = p.CreatedAt,
+                    DestinationCount = p.Destinations.Count,
+                    ActivityCount = p.Activities.Count,
+                    ChecklistItemCount = p.ChecklistItems.Count,
+                    CompletedChecklistItemCount = p.ChecklistItems.Count(c => c.IsCompleted)
+                });
         }
     }
 }

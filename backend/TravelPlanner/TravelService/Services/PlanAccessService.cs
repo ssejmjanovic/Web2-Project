@@ -64,6 +64,10 @@ namespace TravelService.Services
                 return plan;
             }
 
+            if (_caller.IsAdmin)
+                return plan;
+            
+
             if (plan.UserId != _caller.UserId)
                 throw new NotFoundException($"Travel plan with id {planId} was not found.");
 
