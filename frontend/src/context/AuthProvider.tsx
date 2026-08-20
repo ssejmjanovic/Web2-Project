@@ -45,12 +45,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   };
 
+  const updateCurrentUser = (updated: User) => {
+    localStorage.setItem('user', JSON.stringify(updated));
+    setUser(updated);
+  };
+
   const value: AuthContextValue = {
     user,
     isAdmin: user?.role === 'Admin',
     login,
     register,
     logout,
+    updateCurrentUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

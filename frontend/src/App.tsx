@@ -9,6 +9,7 @@ import { Register } from './pages/Register';
 import { CreatePlan } from './pages/CreatePlan';
 import { PlanDetail } from './pages/PlanDetail';
 import { SharedPlan } from './pages/SharedPlan';
+import { Profile } from './pages/Profile';
 
 function App() {
   return (
@@ -56,6 +57,17 @@ function App() {
             <ProtectedRoute>
               <Layout>
                 <PlanDetail />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Profile />
               </Layout>
             </ProtectedRoute>
           }

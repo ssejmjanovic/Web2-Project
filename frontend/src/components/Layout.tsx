@@ -36,9 +36,12 @@ export function Layout({children}: {children: ReactNode}) {
               </Link>
             )}
 
-            <span className="hidden sm:inline text-sm text-ink-light">
+            <Link
+              to="/profile"
+              className="hidden sm:inline text-sm text-ink-light hover:text-sky-deep"
+            >
               {user?.firstName} {user?.lastName}
-            </span>
+            </Link>
 
             <Button variant="secondary" onClick={handleLogout} className="px-3 py-1.5">
               <LogOut className="w-4 h-4" />
