@@ -1,8 +1,7 @@
+import { CalendarDays, FileDown, Trash2, Wallet } from 'lucide-react';
 import { Button } from '../ui/Button';
 import type { TravelPlan } from '../../models/travel';
 import { formatCurrency, formatDate } from '../../utils/format';
-import { CalendarDays, FileDown, Trash2, Wallet } from 'lucide-react';
-import { exportPlanToPdf } from '../../utils/planPdf';
 
 interface PlanHeaderProps {
   plan: TravelPlan;
@@ -10,6 +9,11 @@ interface PlanHeaderProps {
 }
 
 export function PlanHeader({ plan, onDelete }: PlanHeaderProps) {
+  const handleExportPdf = async () => {
+    const { exportPlanToPdf } = await import('../../utils/planPdf');
+    exportPlanToPdf(plan);
+  };
+
   return (
     <div className="glass-card p-6 mb-6">
       <div className="flex items-start justify-between gap-4 mb-3">
@@ -26,7 +30,7 @@ export function PlanHeader({ plan, onDelete }: PlanHeaderProps) {
         <div className="flex gap-2 shrink-0">
           <Button
             variant="secondary"
-            onClick={() => exportPlanToPdf(plan)}
+            onClick={handleExportPdf}
             className="px-3 py-1.5"
           >
             <FileDown className="w-4 h-4" />
@@ -41,7 +45,6 @@ export function PlanHeader({ plan, onDelete }: PlanHeaderProps) {
           )}
         </div>
       </div>
-      
 
       <div className="flex items-center gap-1.5 text-sm text-ink-light mb-4">
         <CalendarDays className="w-4 h-4 text-sky-aero" />
@@ -82,8 +85,11 @@ function Stat({
         <Wallet className="w-3 h-3" />
         {label}
       </div>
+
       <div
-        className={`font-display font-black ${highlight ? 'text-red-600' : 'text-sky-deep'}`}
+        className={`font-display font-black ${
+          highlight ? 'text-red-600' : 'text-sky-deep'
+        }`}
       >
         {value}
       </div>
