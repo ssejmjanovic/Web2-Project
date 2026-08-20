@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 900" width="920" height="900" role="img" aria-label="Travel Planner system architecture">
+  <title>Travel Planner — System architecture</title>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L9 5 L1 9" fill="none" stroke="#64748b" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <marker id="arrow-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M1 1 L9 5 L1 9" fill="none" stroke="#0f766e" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <style>
+    .t      { font-family: "Segoe UI", system-ui, sans-serif; }
+    .title  { font-size: 15px; font-weight: 700; }
+    .sub    { font-size: 11.5px; }
+    .lbl    { font-size: 11px; fill: #64748b; }
+    .lbl-i  { font-size: 11px; fill: #0f766e; font-style: italic; }
+    .zone   { font-size: 12px; font-weight: 600; fill: #64748b; }
+    .legend { font-size: 11.5px; fill: #475569; }
+  </style>
+
+  <rect x="0" y="0" width="920" height="900" fill="#f8fafc"/>
+
+  <!-- ── Frontend ─────────────────────────────────────────── -->
+  <rect x="300" y="24" width="320" height="74" rx="12" fill="#dcfce7" stroke="#4ade80" stroke-width="1.4"/>
+  <text class="t title" x="460" y="52" text-anchor="middle" fill="#166534">React Frontend</text>
+  <text class="t sub"   x="460" y="72" text-anchor="middle" fill="#166534">Vite · TypeScript · Tailwind · React Router</text>
+  <text class="t sub"   x="460" y="88" text-anchor="middle" fill="#166534">localhost:5173</text>
+
+  <line x1="460" y1="98" x2="460" y2="182" stroke="#64748b" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <text class="t lbl" x="472" y="127">HTTP · Authorization: Bearer &lt;JWT&gt;</text>
+  <text class="t lbl" x="472" y="143">or X-Share-Token</text>
+  <text class="t lbl" x="472" y="167">the only address the browser knows</text>
+
+  <!-- ── Service Fabric cluster ───────────────────────────── -->
+  <rect x="30" y="182" width="860" height="500" rx="14" fill="#ffffff" stroke="#94a3b8" stroke-width="1.3" stroke-dasharray="7 5"/>
+  <text class="t zone" x="48" y="206">Microsoft Service Fabric cluster · 1 node · localhost:19080</text>
+
+  <!-- Gateway -->
+  <rect x="300" y="222" width="320" height="76" rx="12" fill="#ede9fe" stroke="#a78bfa" stroke-width="1.4"/>
+  <text class="t title" x="460" y="250" text-anchor="middle" fill="#5b21b6">ApiGateway · :5000</text>
+  <text class="t sub"   x="460" y="270" text-anchor="middle" fill="#5b21b6">stateless · path-prefix routing · CORS</text>
+  <text class="t sub"   x="460" y="286" text-anchor="middle" fill="#5b21b6">forwards tokens, never validates them</text>
+
+  <!-- Gateway to services -->
+  <path d="M380 298 L175 384" fill="none" stroke="#64748b" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <path d="M460 298 L460 384" fill="none" stroke="#64748b" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <path d="M540 298 L745 384" fill="none" stroke="#64748b" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <text class="t lbl" x="243" y="330">/api/auth · /api/users</text>
+  <text class="t lbl" x="470" y="345">/api/travel-plans</text>
+  <text class="t lbl" x="600" y="330">/api/shares</text>
+
+  <!-- UserService -->
+  <rect x="60" y="384" width="230" height="104" rx="12" fill="#fee2e2" stroke="#fca5a5" stroke-width="1.4"/>
+  <text class="t title" x="175" y="411" text-anchor="middle" fill="#991b1b">UserService · :5001</text>
+  <text class="t sub"   x="175" y="431" text-anchor="middle" fill="#991b1b">stateless</text>
+  <text class="t sub"   x="175" y="450" text-anchor="middle" fill="#991b1b">registration · login · roles</text>
+  <text class="t sub"   x="175" y="468" text-anchor="middle" fill="#991b1b">issues + signs the JWT</text>
+
+  <!-- TravelService -->
+  <rect x="345" y="384" width="230" height="104" rx="12" fill="#dbeafe" stroke="#93c5fd" stroke-width="1.4"/>
+  <text class="t title" x="460" y="411" text-anchor="middle" fill="#1e40af">TravelService · :5002</text>
+  <text class="t sub"   x="460" y="431" text-anchor="middle" fill="#1e40af">stateless</text>
+  <text class="t sub"   x="460" y="450" text-anchor="middle" fill="#1e40af">plans · destinations · activities</text>
+  <text class="t sub"   x="460" y="468" text-anchor="middle" fill="#1e40af">expenses · checklist</text>
+
+  <!-- SharingService -->
+  <rect x="630" y="384" width="230" height="104" rx="12" fill="#ffedd5" stroke="#fdba74" stroke-width="1.4"/>
+  <text class="t title" x="745" y="411" text-anchor="middle" fill="#9a3412">SharingService · :5003</text>
+  <text class="t sub"   x="745" y="431" text-anchor="middle" fill="#9a3412" font-weight="700">STATEFUL</text>
+  <text class="t sub"   x="745" y="450" text-anchor="middle" fill="#9a3412">share tokens · VIEW / EDIT</text>
+  <text class="t sub"   x="745" y="468" text-anchor="middle" fill="#9a3412">no database</text>
+
+  <!-- Service to service -->
+  <path d="M575 412 L630 412" fill="none" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arrow-teal)"/>
+  <path d="M630 462 L575 462" fill="none" stroke="#0f766e" stroke-width="1.6" marker-end="url(#arrow-teal)"/>
+  <text class="t lbl-i" x="602" y="512" text-anchor="middle">validate share token</text>
+  <text class="t lbl-i" x="602" y="528" text-anchor="middle">(every request)</text>
+  <text class="t lbl-i" x="602" y="550" text-anchor="middle">verify plan ownership</text>
+  <text class="t lbl-i" x="602" y="566" text-anchor="middle">(when a link is created)</text>
+
+  <!-- Reliable dictionary -->
+  <line x1="745" y1="488" x2="745" y2="592" stroke="#64748b" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <rect x="630" y="592" width="230" height="66" rx="12" fill="#fef9c3" stroke="#fde047" stroke-width="1.4"/>
+  <text class="t title" x="745" y="618" text-anchor="middle" fill="#854d0e">IReliableDictionary</text>
+  <text class="t sub"   x="745" y="638" text-anchor="middle" fill="#854d0e">replicated, on disk, inside the service</text>
+  <text class="t sub"   x="745" y="653" text-anchor="middle" fill="#854d0e">HasPersistedState = true</text>
+
+  <!-- Cluster to databases -->
+  <line x1="175" y1="488" x2="175" y2="742" stroke="#64748b" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <line x1="460" y1="488" x2="460" y2="742" stroke="#64748b" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <text class="t lbl" x="186" y="560">EF Core</text>
+  <text class="t lbl" x="186" y="576">migrations</text>
+  <text class="t lbl" x="471" y="560">EF Core</text>
+  <text class="t lbl" x="471" y="576">migrations</text>
+
+  <!-- ── Docker / SQL ─────────────────────────────────────── -->
+  <rect x="30" y="706" width="560" height="160" rx="14" fill="#ffffff" stroke="#94a3b8" stroke-width="1.3" stroke-dasharray="7 5"/>
+  <text class="t zone" x="48" y="730">Docker · SQL Server 2022 · localhost:1433</text>
+
+  <rect x="60" y="742" width="230" height="96" rx="12" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.4"/>
+  <text class="t title" x="175" y="770" text-anchor="middle" fill="#334155">TravelPlanner_Users</text>
+  <text class="t sub"   x="175" y="792" text-anchor="middle" fill="#475569">Users</text>
+  <text class="t sub"   x="175" y="810" text-anchor="middle" fill="#475569">unique index on Email</text>
+  <text class="t sub"   x="175" y="828" text-anchor="middle" fill="#475569">BCrypt password hashes</text>
+
+  <rect x="345" y="742" width="230" height="96" rx="12" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.4"/>
+  <text class="t title" x="460" y="770" text-anchor="middle" fill="#334155">TravelPlanner_Travel</text>
+  <text class="t sub"   x="460" y="792" text-anchor="middle" fill="#475569">TravelPlans · Destinations</text>
+  <text class="t sub"   x="460" y="810" text-anchor="middle" fill="#475569">Activities · Expenses · Checklist</text>
+  <text class="t sub"   x="460" y="828" text-anchor="middle" fill="#475569">ON DELETE CASCADE</text>
+
+  <!-- ── Legend ───────────────────────────────────────────── -->
+  <rect x="620" y="706" width="270" height="160" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.2"/>
+  <text class="t zone" x="638" y="730">Notes</text>
+  <text class="t legend" x="638" y="754">One database per service — no foreign</text>
+  <text class="t legend" x="638" y="770">keys across a service boundary.</text>
+  <text class="t legend" x="638" y="792">The JWT signing key is defined once in</text>
+  <text class="t legend" x="638" y="808">ApplicationManifest.xml and pushed into</text>
+  <text class="t legend" x="638" y="824">each service with ConfigOverrides.</text>
+  <text class="t legend" x="638" y="846">Every service validates tokens itself;</text>
+  <text class="t legend" x="638" y="862">the gateway holds no secrets.</text>
+</svg>
