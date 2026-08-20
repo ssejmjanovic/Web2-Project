@@ -68,6 +68,7 @@ export interface TravelPlan {
 
 export interface TravelPlanSummary {
   id: number;
+  userId: number;
   name: string;
   description: string | null;
   startDate: string;

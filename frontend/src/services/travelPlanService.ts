@@ -7,6 +7,11 @@ export const travelPlanService = {
         return response.data;
     },
 
+    getAllForAdmin: async (): Promise<TravelPlanSummary[]> => {
+        const response = await api.get<TravelPlanSummary[]>('/api/travel-plans/all');
+        return response.data;
+    },
+
     getById: async (id: number): Promise<TravelPlan> => {
         const response = await api.get<TravelPlan>(`/api/travel-plans/${id}`);
         return response.data;
